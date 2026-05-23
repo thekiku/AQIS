@@ -117,6 +117,15 @@
       gap: 8px;
     }
 
+    .meta-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
     .tag {
       font-family: var(--mono);
       font-size: 0.75rem;
@@ -137,6 +146,18 @@
       border-radius: 999px;
       cursor: pointer;
       transition: transform 140ms ease, box-shadow 140ms ease;
+      margin-left: auto;
+    }
+
+    .key-input {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      font-family: var(--mono);
+      background: var(--surface);
+      color: var(--text);
+      min-width: 160px;
     }
 
     .theme-toggle:hover {
@@ -147,6 +168,38 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tab-button {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    .tab-button.active {
+      background: var(--accent-2);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fade-up 240ms ease both;
+    }
+
+    .tab-panel.active {
+      display: grid;
       gap: 16px;
     }
 
@@ -239,6 +292,12 @@
       color: #fff;
     }
 
+    .btn-inline {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
     .status {
       min-height: 24px;
       font-size: 0.9rem;
@@ -317,96 +376,144 @@
       <h1 class="title">Adaptive Queue Intelligence System</h1>
       <p class="subtitle">Priority-driven queueing with lazy updates and a real-time view.</p>
       <div class="meta">
-        <div class="meta-tags">
-          <span class="tag">FastAPI</span>
-          <span class="tag">SQLite</span>
-          <span class="tag">Score = alpha * urgency + gamma * category - beta * arrival</span>
+        <div class="meta-actions">
+          <div class="row">
+            <label for="admin-key">Admin Key</label>
+            <input class="key-input" id="admin-key" type="password" placeholder="Enter key" />
+          </div>
+          <button class="theme-toggle" id="theme-toggle" type="button">Theme: Light</button>
         </div>
-        <button class="theme-toggle" id="theme-toggle" type="button">Theme: Light</button>
       </div>
     </section>
 
-    <section class="grid">
-      <article class="card">
-        <h2>Add User</h2>
-        <div class="row">
-          <label for="add-name">User Name</label>
-          <input id="add-name" type="text" placeholder="Alice" />
-        </div>
-        <div class="row">
-          <label for="add-id">User ID</label>
-          <input id="add-id" type="text" placeholder="user-123" />
-        </div>
-        <div class="row">
-          <label for="add-urgency">Urgency</label>
-          <input id="add-urgency" type="number" min="0" step="0.1" placeholder="8" />
-        </div>
-        <div class="row">
-          <label for="add-category">Category Weight</label>
-          <input id="add-category" type="number" min="0" step="0.1" placeholder="5" />
-        </div>
-        <div class="actions">
-          <button class="btn-primary" id="btn-add">Create User</button>
-        </div>
-      </article>
+    <div class="tabs">
+      <button class="tab-button active" data-tab="admin" type="button">Admin Desk</button>
+      <button class="tab-button" data-tab="doctor" type="button">Doctor Desk</button>
+    </div>
 
-      <article class="card">
-        <h2>Update User Priority</h2>
-        <div class="row">
-          <label for="upd-id">User ID</label>
-          <input id="upd-id" type="text" placeholder="user-123" />
-        </div>
-        <div class="row">
-          <label for="upd-urgency">Urgency (optional)</label>
-          <input id="upd-urgency" type="number" min="0" step="0.1" placeholder="10" />
-        </div>
-        <div class="row">
-          <label for="upd-category">Category Weight (optional)</label>
-          <input id="upd-category" type="number" min="0" step="0.1" placeholder="6" />
-        </div>
-        <div class="actions">
-          <button class="btn-secondary" id="btn-update">Update Priority</button>
-        </div>
-      </article>
+    <section class="tab-panel active" data-tab="admin">
+      <section class="grid">
+        <article class="card">
+          <h2>Add User</h2>
+          <div class="row">
+            <label for="add-name">User Name</label>
+            <input id="add-name" type="text" placeholder="Alice" />
+          </div>
+          <div class="row">
+            <label for="add-id">User ID</label>
+            <input id="add-id" type="text" placeholder="user-123" />
+          </div>
+          <div class="row">
+            <label for="add-urgency">Urgency</label>
+            <input id="add-urgency" type="number" min="0" step="0.1" placeholder="8" />
+          </div>
+          <div class="row">
+            <label for="add-category">Category Weight</label>
+            <input id="add-category" type="number" min="0" step="0.1" placeholder="5" />
+          </div>
+          <div class="actions">
+            <button class="btn-primary" id="btn-add">Create User</button>
+          </div>
+        </article>
 
-      <article class="card">
-        <h2>Queue Actions</h2>
-        <div class="actions">
-          <button class="btn-secondary" id="btn-refresh">Refresh Queue</button>
-          <button class="btn-danger" id="btn-next">Get Next User</button>
+        <article class="card">
+          <h2>Update User Priority</h2>
+          <div class="row">
+            <label for="upd-id">User ID</label>
+            <input id="upd-id" type="text" placeholder="user-123" />
+          </div>
+          <div class="row">
+            <label for="upd-urgency">Urgency (optional)</label>
+            <input id="upd-urgency" type="number" min="0" step="0.1" placeholder="10" />
+          </div>
+          <div class="row">
+            <label for="upd-category">Category Weight (optional)</label>
+            <input id="upd-category" type="number" min="0" step="0.1" placeholder="6" />
+          </div>
+          <div class="actions">
+            <button class="btn-secondary" id="btn-update">Update Priority</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Queue Actions</h2>
+          <div class="actions">
+            <button class="btn-secondary" id="btn-refresh">Refresh Queue</button>
+            <button class="btn-danger" id="btn-next">Get Next User</button>
+          </div>
+          <p class="subtitle">Next user:</p>
+          <div id="next-user" class="pill">No user extracted yet</div>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2>Ordered Active Queue</h2>
+        <p id="status" class="status">Ready.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>User ID</th>
+                <th>Urgency</th>
+                <th>Category Weight</th>
+                <th>Wait Time (s)</th>
+                <th>Version</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="queue-body-admin"></tbody>
+          </table>
         </div>
-        <p class="subtitle">Next user:</p>
-        <div id="next-user" class="pill">No user extracted yet</div>
-      </article>
+      </section>
     </section>
 
-    <section class="card">
-      <h2>Ordered Active Queue</h2>
-      <p id="status" class="status">Ready.</p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>User Name</th>
-              <th>User ID</th>
-              <th>Urgency</th>
-              <th>Category Weight</th>
-              <th>Arrival Time (ms)</th>
-              <th>Version</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody id="queue-body"></tbody>
-        </table>
-      </div>
+    <section class="tab-panel" data-tab="doctor">
+      <section class="grid">
+        <article class="card">
+          <h2>Doctor Desk</h2>
+          <p class="subtitle">Mark patients as done after treatment.</p>
+          <div class="actions">
+            <button class="btn-secondary" id="btn-refresh-doctor">Refresh Queue</button>
+          </div>
+          <p id="status-doctor" class="status">Ready.</p>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2>Patients Awaiting Treatment</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>User ID</th>
+                <th>Urgency</th>
+                <th>Category Weight</th>
+                <th>Wait Time (s)</th>
+                <th>Version</th>
+                <th>Score</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="queue-body-doctor"></tbody>
+          </table>
+        </div>
+      </section>
     </section>
   </main>
 
   <script>
     const statusEl = document.getElementById("status");
-    const queueBodyEl = document.getElementById("queue-body");
+    const statusDoctorEl = document.getElementById("status-doctor");
+    const queueBodyAdminEl = document.getElementById("queue-body-admin");
+    const queueBodyDoctorEl = document.getElementById("queue-body-doctor");
     const nextUserEl = document.getElementById("next-user");
     const themeToggleEl = document.getElementById("theme-toggle");
+    const adminKeyEl = document.getElementById("admin-key");
+    const tabButtons = document.querySelectorAll(".tab-button");
+    const tabPanels = document.querySelectorAll(".tab-panel");
+    let adminKey = "";
 
     function setTheme(mode) {
       document.documentElement.setAttribute("data-theme", mode);
@@ -426,9 +533,34 @@
       setTheme(prefersDark ? "dark" : "light");
     }
 
-    function setStatus(message, type) {
-      statusEl.textContent = message;
-      statusEl.className = "status" + (type ? " " + type : "");
+    function setAdminKey(value) {
+      adminKey = value.trim();
+      localStorage.setItem("aqis-admin-key", adminKey);
+    }
+
+    function initAdminKey() {
+      const saved = localStorage.getItem("aqis-admin-key");
+      if (saved) {
+        adminKey = saved;
+        if (adminKeyEl) adminKeyEl.value = saved;
+      }
+    }
+
+    function setActiveTab(tab) {
+      tabButtons.forEach((btn) => {
+        const isActive = btn.dataset.tab === tab;
+        btn.classList.toggle("active", isActive);
+      });
+      tabPanels.forEach((panel) => {
+        const isActive = panel.dataset.tab === tab;
+        panel.classList.toggle("active", isActive);
+      });
+    }
+
+    function setStatus(message, type, target = statusEl) {
+      if (!target) return;
+      target.textContent = message;
+      target.className = "status" + (type ? " " + type : "");
     }
 
     function toNumberOrNull(value) {
@@ -437,12 +569,31 @@
       return Number.isNaN(parsed) ? null : parsed;
     }
 
-    function renderQueue(users) {
-      queueBodyEl.innerHTML = "";
+    function ensureAdminKey(target = statusEl) {
+      if (!adminKey) {
+        setStatus("Admin key required.", "error", target);
+        return false;
+      }
+      return true;
+    }
+
+    function formatDuration(seconds) {
+      if (seconds < 60) return `${Math.floor(seconds)}s`;
+      const minutes = seconds / 60;
+      if (minutes < 60) return `${Math.floor(minutes)}m`;
+      const hours = minutes / 60;
+      if (hours < 24) return `${Math.floor(hours)}h`;
+      const days = hours / 24;
+      return `${Math.floor(days)}d`;
+    }
+
+    function renderTable(bodyEl, users, withActions) {
+      if (!bodyEl) return;
+      bodyEl.innerHTML = "";
       if (!users || users.length === 0) {
         const row = document.createElement("tr");
-        row.innerHTML = '<td colspan="7">Queue is empty.</td>';
-        queueBodyEl.appendChild(row);
+        row.innerHTML = `<td colspan="${withActions ? 8 : 7}">Queue is empty.</td>`;
+        bodyEl.appendChild(row);
         return;
       }
 
@@ -450,22 +601,32 @@
         const displayName = u.user_name ?? u.user_id ?? u.username ?? u.id ?? "-";
         const displayId = u.user_id ?? u.id ?? "-";
         const row = document.createElement("tr");
+        const waitSeconds = Math.max(0, (Date.now() - u.arrival_time_ms) / 1000);
+        const waitDisplay = formatDuration(waitSeconds);
         row.innerHTML = `
           <td>${displayName}</td>
           <td>${displayId}</td>
           <td>${u.urgency}</td>
           <td>${u.category_weight}</td>
-          <td>${u.arrival_time_ms}</td>
+          <td>${waitDisplay}</td>
           <td>${u.version}</td>
           <td>${Number(u.score).toFixed(4)}</td>
+          ${withActions ? `<td><button class="btn-danger btn-inline" data-action="done" data-user-id="${displayId}">Done</button></td>` : ""}
         `;
-        queueBodyEl.appendChild(row);
+        bodyEl.appendChild(row);
       });
     }
 
+    function renderQueue(users) {
+      renderTable(queueBodyAdminEl, users, false);
+      renderTable(queueBodyDoctorEl, users, true);
+    }
+
     async function requestJson(url, options = {}) {
+      const headers = { "Content-Type": "application/json" };
+      if (adminKey) headers["X-Admin-Key"] = adminKey;
       const response = await fetch(url, {
-        headers: { "Content-Type": "application/json" },
+        headers,
         ...options,
       });
       const data = await response.json().catch(() => ({}));
@@ -480,13 +641,16 @@
       try {
         const data = await requestJson("/queue");
         renderQueue(data.users || []);
-        setStatus("Queue refreshed.", "success");
+        setStatus("Queue refreshed.", "success", statusEl);
+        setStatus("Queue refreshed.", "success", statusDoctorEl);
       } catch (error) {
-        setStatus(error.message, "error");
+        setStatus(error.message, "error", statusEl);
+        setStatus(error.message, "error", statusDoctorEl);
       }
     }
 
     async function addUser() {
+      if (!ensureAdminKey(statusEl)) return;
       const userName = document.getElementById("add-name").value.trim();
       const userId = document.getElementById("add-id").value.trim();
       const urgency = toNumberOrNull(document.getElementById("add-urgency").value);
@@ -515,6 +679,7 @@
     }
 
     async function updateUser() {
+      if (!ensureAdminKey(statusEl)) return;
       const userId = document.getElementById("upd-id").value.trim();
       const urgency = toNumberOrNull(document.getElementById("upd-urgency").value);
       const categoryWeight = toNumberOrNull(document.getElementById("upd-category").value);
@@ -545,14 +710,26 @@
     }
 
     async function getNextUser() {
+      if (!ensureAdminKey(statusEl)) return;
       try {
         const data = await requestJson("/next");
         const displayName = data.user_name ?? data.user_id ?? data.username ?? data.id ?? "-";
         nextUserEl.textContent = `${displayName} | score ${Number(data.score).toFixed(4)} | v${data.version}`;
-        setStatus("Extracted highest-priority user.", "success");
+        setStatus("Extracted highest-priority user.", "success", statusEl);
         await refreshQueue();
       } catch (error) {
-        setStatus(error.message, "error");
+        setStatus(error.message, "error", statusEl);
+      }
+    }
+
+    async function markDone(userId) {
+      if (!ensureAdminKey(statusDoctorEl)) return;
+      try {
+        await requestJson(`/done/${encodeURIComponent(userId)}`, { method: "POST" });
+        setStatus("Patient marked done.", "success", statusDoctorEl);
+        await refreshQueue();
+      } catch (error) {
+        setStatus(error.message, "error", statusDoctorEl);
       }
     }
 
@@ -560,6 +737,26 @@
     document.getElementById("btn-update").addEventListener("click", updateUser);
     document.getElementById("btn-refresh").addEventListener("click", refreshQueue);
     document.getElementById("btn-next").addEventListener("click", getNextUser);
+    document.getElementById("btn-refresh-doctor").addEventListener("click", refreshQueue);
+    if (queueBodyDoctorEl) {
+      queueBodyDoctorEl.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (target.dataset.action === "done" && target.dataset.userId) {
+          markDone(target.dataset.userId);
+        }
+      });
+    }
+    if (adminKeyEl) {
+      adminKeyEl.addEventListener("input", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLInputElement)) return;
+        setAdminKey(target.value);
+      });
+    }
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => setActiveTab(button.dataset.tab));
+    });
     if (themeToggleEl) {
       themeToggleEl.addEventListener("click", () => {
         const current = document.documentElement.getAttribute("data-theme") || "light";
@@ -568,6 +765,8 @@
     }
 
     initTheme();
+    initAdminKey();
+    setActiveTab("admin");
     refreshQueue();
   </script>
 </body>

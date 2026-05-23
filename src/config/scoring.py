@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 
 
@@ -9,3 +10,6 @@ class ScoringConfig:
 
 
 SCORING_CONFIG = ScoringConfig()
+
+ADMIN_KEY = os.getenv("AQIS_ADMIN_KEY", "aqis-admin")
+REFRESH_SECONDS = int(os.getenv("AQIS_REFRESH_SECONDS", "30"))

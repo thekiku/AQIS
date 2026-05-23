@@ -33,3 +33,10 @@ def get_next_user(db: Session) -> UserView:
         return aqis_service.extract_next(db)
     except QueueEmptyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+
+def remove_user(db: Session, user_id: str) -> UserView:
+    try:
+        return aqis_service.remove_user(db, user_id)
+    except UserNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc

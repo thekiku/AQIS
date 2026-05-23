@@ -212,6 +212,71 @@ class AQISService:
 
             raise QueueEmptyError("Queue is empty")
 
+    def remove_user(self, db: Session, user_id: str) -> UserView:
+        with self._lock:
+            self._ensure_loaded(db)
+            db_user = db.get(ActiveUser, user_id)
+            if db_user is None:
+                raise UserNotFoundError(f"User '{user_id}' not found")
+
+            current = self.active_users.get(user_id)
+            if current is None:
+                current = QueueEntry(
+                    user_id=db_user.user_id,
+                    user_name=db_user.user_name,
+                    urgency=db_user.urgency,
+                    category_weight=db_user.category_weight,
+                    arrival_time_ms=db_user.arrival_time_ms,
+                    version=db_user.version,
+                    score=db_user.score,
+                )
+
+            self.latest_version.pop(user_id, None)
+            self.active_users.pop(user_id, None)
+            db.delete(db_user)
+            db.commit()
+            return self._to_user_view(current)
+
+    def refresh_scores(self, db: Session) -> int:
+        with self._lock:
+            self._ensure_loaded(db)
+            if not self.active_users:
+                return 0
+
+            updated = 0
+            for user_id, current in list(self.active_users.items()):
+                db_user = db.get(ActiveUser, user_id)
+                if db_user is None:
+                    continue
+
+                version = self.latest_version[user_id] + 1
+                score = self._compute_score(current.urgency, current.category_weight, current.arrival_time_ms)
+                entry = QueueEntry(
+                    user_id=user_id,
+                    user_name=current.user_name,
+                    urgency=current.urgency,
+                    category_weight=current.category_weight,
+                    arrival_time_ms=current.arrival_time_ms,
+                    version=version,
+                    score=score,
+                )
+
+                self.latest_version[user_id] = version
+                self.active_users[user_id] = entry
+                self._sequence += 1
+                self.heap.push(entry, self._sequence)
+
+                db_user.user_name = entry.user_name
+                db_user.urgency = entry.urgency
+                db_user.category_weight = entry.category_weight
+                db_user.arrival_time_ms = entry.arrival_time_ms
+                db_user.version = entry.version
+                db_user.score = entry.score
+                updated += 1
+
+            db.commit()
+            return updated
+
     def get_queue_ordered(self, db: Session) -> list[UserView]:
         with self._lock:
             self._ensure_loaded(db)

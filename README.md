@@ -93,6 +93,8 @@ Python FastAPI backend for AQIS with API endpoints and modular service design.
 - Version map to discard stale heap entries
 - Arrival timestamp fairness with no in-place heap mutation
 - SQLite-backed persistence (`aqis.db`) for active user state
+- Automatic score refresh every 30 seconds
+- Admin-key protected write endpoints
 
 ## Project Structure
 
@@ -135,12 +137,25 @@ python -m src.main
 
 Server starts at `http://127.0.0.1:8000`.
 
+## Admin Key
+
+Write endpoints require an admin key via the `X-Admin-Key` header.
+
+Default: `aqis-admin`
+
+You can override it with:
+
+```bash
+setx AQIS_ADMIN_KEY "your-key-here"
+```
+
 ## API Endpoints
 
-- `POST /user` add a user
-- `PUT /user/{id}` update urgency/category weight (lazy update)
+- `POST /user` add a user (admin key required)
+- `PUT /user/{id}` update urgency/category weight (admin key required)
 - `GET /queue` return full ordered active queue
-- `GET /next` extract highest-priority user
+- `GET /next` extract highest-priority user (admin key required)
+- `POST /done/{id}` remove a user after treatment (admin key required)
 - `GET /health` simple health check
 
 ## Sample Requests
@@ -149,6 +164,7 @@ Server starts at `http://127.0.0.1:8000`.
 
 ```bash
 curl -X POST http://127.0.0.1:8000/user \
+  -H "X-Admin-Key: aqis-admin" \
   -H "Content-Type: application/json" \
   -d '{"user_id":"u1","urgency":8,"category_weight":5}'
 ```
@@ -157,6 +173,7 @@ curl -X POST http://127.0.0.1:8000/user \
 
 ```bash
 curl -X PUT http://127.0.0.1:8000/user/u1 \
+  -H "X-Admin-Key: aqis-admin" \
   -H "Content-Type: application/json" \
   -d '{"urgency":10}'
 ```
@@ -170,5 +187,11 @@ curl http://127.0.0.1:8000/queue
 ### Extract next
 
 ```bash
-curl http://127.0.0.1:8000/next
+curl -H "X-Admin-Key: aqis-admin" http://127.0.0.1:8000/next
+
+### Mark done
+
+```bash
+curl -X POST -H "X-Admin-Key: aqis-admin" http://127.0.0.1:8000/done/u1
+```
 ```
