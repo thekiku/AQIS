@@ -1,7 +1,7 @@
 from sqlalchemy import BigInteger, Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.db.database import Base
+from src.db.db import Base
 
 
 class ActiveUser(Base):

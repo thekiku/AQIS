@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from src.models.schemas import CreateUserRequest, QueueResponse, UpdateUserRequest, UserView
-from src.services.aqis_service import (
+from src.services.queue_service import (
     QueueEmptyError,
     UserAlreadyExistsError,
     UserNotFoundError,

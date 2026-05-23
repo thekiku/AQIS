@@ -6,11 +6,11 @@ from threading import Lock
 
 from sqlalchemy.orm import Session
 
-from src.config.settings import SCORING_CONFIG
-from src.models.db_user import ActiveUser
-from src.models.queue_entry import QueueEntry
+from src.config.scoring import SCORING_CONFIG
+from src.models.active_user import ActiveUser
+from src.models.queue_item import QueueEntry
 from src.models.schemas import CreateUserRequest, UpdateUserRequest, UserView
-from src.utils.heap import HeapItem, MaxHeap
+from src.utils.priority_heap import HeapItem, MaxHeap
 
 
 class QueueError(Exception):

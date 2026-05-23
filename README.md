@@ -2,6 +2,8 @@
 
 AQIS is a backend-driven dynamic priority queue system.
 
+Deployed website: https://aqis-rho.vercel.app/
+
 ## Topic and Algorithm Idea
 
 - We use a priority-based queue system to dynamically order users based on a computed score.
@@ -97,21 +99,21 @@ Python FastAPI backend for AQIS with API endpoints and modular service design.
 ```text
 .
 ├── src
-│   ├── app.py
-│   ├── server.py
+│   ├── application.py
+│   ├── main.py
 │   ├── config
-│   │   └── settings.py
+│   │   └── scoring.py
 │   ├── controllers
-│   │   └── queue_controller.py
+│   │   └── queue_handlers.py
 │   ├── models
-│   │   ├── queue_entry.py
+│   │   ├── queue_item.py
 │   │   └── schemas.py
 │   ├── routes
-│   │   └── queue_routes.py
+│   │   └── queue_api.py
 │   ├── services
-│   │   └── aqis_service.py
+│   │   └── queue_service.py
 │   └── utils
-│       └── heap.py
+│       └── priority_heap.py
 ├── requirements.txt
 └── README.md
 ```
@@ -128,7 +130,7 @@ pip install -r requirements.txt
 3. Start server:
 
 ```bash
-python -m src.server
+python -m src.main
 ```
 
 Server starts at `http://127.0.0.1:8000`.

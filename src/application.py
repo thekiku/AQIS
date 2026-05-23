@@ -3,9 +3,9 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 
-from src.db.database import SessionLocal, init_db
-from src.routes.queue_routes import router as queue_router
-from src.services.aqis_service import aqis_service
+from src.db.db import SessionLocal, init_db
+from src.routes.queue_api import router as queue_router
+from src.services.queue_service import aqis_service
 
 
 def create_app() -> FastAPI:

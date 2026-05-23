@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from src.controllers.queue_controller import add_user, get_next_user, get_queue, update_user
-from src.db.database import get_db
+from src.controllers.queue_handlers import add_user, get_next_user, get_queue, update_user
+from src.db.db import get_db
 from src.models.schemas import CreateUserRequest, QueueResponse, UpdateUserRequest, UserView
 
 router = APIRouter(tags=["AQIS"])

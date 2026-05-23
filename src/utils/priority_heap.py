@@ -2,7 +2,7 @@ import heapq
 from dataclasses import dataclass, field
 from typing import List, Tuple
 
-from src.models.queue_entry import QueueEntry
+from src.models.queue_item import QueueEntry
 
 
 @dataclass(order=True, slots=True)
